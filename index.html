@@ -33,19 +33,6 @@
         overflow: hidden;
       }
 
-      .hearts {
-        position: absolute;
-        inset: -40px;
-        opacity: 0.25;
-        pointer-events: none;
-        background-image:
-          radial-gradient(circle at 20% 30%, #ff4d6d 0 12px, transparent 13px),
-          radial-gradient(circle at 70% 40%, #ff758f 0 10px, transparent 11px),
-          radial-gradient(circle at 40% 70%, #ff4d6d 0 14px, transparent 15px),
-          radial-gradient(circle at 85% 80%, #ff8fab 0 9px, transparent 10px);
-        filter: blur(0.2px);
-      }
-
       h1 {
         margin: 6px 0 10px;
         font-size: clamp(22px, 4vw, 30px);
@@ -98,57 +85,64 @@
         box-shadow: 0 10px 25px rgba(239,68,68,0.25);
       }
 
-      .result {
-        margin-top: 16px;
-        font-weight: 700;
-        font-size: 16px;
-        display: none;
-      }
-
-      .result.show {
-        display: block;
-        animation: pop 0.25s ease;
-      }
-
       @keyframes pop {
         from { transform: scale(0.98); opacity: 0.6; }
         to { transform: scale(1); opacity: 1; }
       }
 
-      .small {
-        font-size: 12px;
-        opacity: 0.7;
+      .happy {
+        display: none;
+        margin-top: 18px;
+        animation: pop 0.3s ease;
+      }
+
+      .happy img {
+        width: 200px;
+        max-width: 75%;
+        border-radius: 16px;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .happy p {
         margin-top: 10px;
+        font-weight: 800;
+        color: #e11d48;
       }
     </style>
   </head>
 
   <body>
     <div class="card">
-      <div class="hearts"></div>
-
-      <h1>Will you be my Valentine? 💘</h1>
-      <p>Be honest… but “No” is a bit shy today 😅</p>
+      <h1>Hey Love, Will you be my Valentine? 💘</h1>
+      <p>Be honest… the “No” button is a little scared today 😅</p>
 
       <div class="stage" id="stage">
         <button class="btn" id="yes">Yes 💖</button>
         <button class="btn" id="no">No 😶</button>
       </div>
 
-      <div class="result" id="result"></div>
-      <div class="small">Tip: “No” pe cursor le jao 😉</div>
+      <!-- ✅ HAPPY GIF CARD KE ANDAR -->
+      <div class="happy" id="happy">
+        <img
+          src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG1tazF4M284NnJqeWgzN2F3bDFmeHZpcXhtYjl0dDR3YzgxZGZlZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7gGwDB8iMLPuE/giphy.gif"
+          alt="Happy"
+        />
+        <p id="happyText"></p>
+      </div>
     </div>
 
     <script>
       const stage = document.getElementById("stage");
       const noBtn = document.getElementById("no");
       const yesBtn = document.getElementById("yes");
-      const result = document.getElementById("result");
 
-      // Customize these:
-      const herName = "My Love"; // change to her name
-      const yesMessage = `Yayyy ${herName}! 💞 You just made my day!`;
-      const afterYesRedirect = "https://wa.me/923034131719?text=I%20said%20YES%20%F0%9F%92%96"; // e.g. "https://wa.me/xxxxxxxxxx?text=I%20said%20YES%20%F0%9F%92%96" (optional)
+      const happy = document.getElementById("happy");
+      const happyText = document.getElementById("happyText");
+
+      // ✅ Single message (no duplicate text)
+      const yesMessage = "Yayyy! You said YES 😍💖";
+      const afterYesRedirect = "https://wa.me/923034131719?text=I%20said%20YES%20%F0%9F%92%96";
 
       function clamp(n, min, max) {
         return Math.max(min, Math.min(max, n));
@@ -158,7 +152,6 @@
         const sRect = stage.getBoundingClientRect();
         const bRect = noBtn.getBoundingClientRect();
 
-        // random position inside stage (with padding)
         const padding = 12;
         const maxX = sRect.width - bRect.width - padding;
         const maxY = sRect.height - bRect.height - padding;
@@ -171,11 +164,9 @@
         noBtn.style.transform = "translate(0, 0)";
       }
 
-      // Initialize no button to absolute within stage nicely
-      // Convert initial center positioning into pixel positioning
       window.addEventListener("load", () => {
-        // Put both buttons in reasonable places first:
         const sRect = stage.getBoundingClientRect();
+
         noBtn.style.left = `${Math.round(sRect.width * 0.62)}px`;
         noBtn.style.top = `${Math.round(sRect.height * 0.60)}px`;
         noBtn.style.transform = "translate(0, 0)";
@@ -185,7 +176,6 @@
         yesBtn.style.transform = "translate(0, 0)";
       });
 
-      // Make "No" run away when cursor gets close
       stage.addEventListener("mousemove", (e) => {
         const sRect = stage.getBoundingClientRect();
         const mx = e.clientX - sRect.left;
@@ -196,12 +186,9 @@
         const by = bRect.top - sRect.top + bRect.height / 2;
 
         const dist = Math.hypot(mx - bx, my - by);
-
-        // If cursor is within 80px of No button, move it
         if (dist < 90) moveNoButton();
       });
 
-      // Also move on hover/touch
       noBtn.addEventListener("mouseenter", moveNoButton);
       noBtn.addEventListener("touchstart", (e) => {
         e.preventDefault();
@@ -209,19 +196,19 @@
       });
 
       yesBtn.addEventListener("click", () => {
-        result.textContent = yesMessage;
-        result.classList.add("show");
+        // hide buttons area (optional)
+        yesBtn.style.display = "none";
+        noBtn.style.display = "none";
 
-        // Optional: hide buttons after yes
-        yesBtn.disabled = true;
-        noBtn.disabled = true;
-        yesBtn.style.opacity = "0.7";
-        noBtn.style.opacity = "0.7";
+        // show gif + one text only
+        happyText.textContent = yesMessage;
+        happy.style.display = "block";
 
+        // optional redirect
         if (afterYesRedirect) {
           setTimeout(() => {
             window.location.href = afterYesRedirect;
-          }, 900);
+          }, 2500);
         }
       });
     </script>

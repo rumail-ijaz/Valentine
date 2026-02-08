@@ -114,12 +114,14 @@
 
   <body>
     <div class="card">
-      <h1>Hey Love, Will you be my Valentine? 💘</h1>
+      <div id="card-section">
+        <h1>Hey Love, Will you be my Valentine? 💘</h1>
       <p>Be honest… the “No” button is a little scared today 😅</p>
 
       <div class="stage" id="stage">
         <button class="btn" id="yes">Yes 💖</button>
         <button class="btn" id="no">No 😶</button>
+      </div>
       </div>
 
       <!-- ✅ HAPPY GIF CARD KE ANDAR -->
@@ -136,13 +138,13 @@
       const stage = document.getElementById("stage");
       const noBtn = document.getElementById("no");
       const yesBtn = document.getElementById("yes");
+      const card = document.getElementById("card-section");
 
       const happy = document.getElementById("happy");
       const happyText = document.getElementById("happyText");
 
       // ✅ Single message (no duplicate text)
       const yesMessage = "Yayyy! You said YES 😍💖";
-     
 
       function clamp(n, min, max) {
         return Math.max(min, Math.min(max, n));
@@ -199,6 +201,7 @@
         // hide buttons area (optional)
         yesBtn.style.display = "none";
         noBtn.style.display = "none";
+        card.style.display = "none";
 
         // show gif + one text only
         happyText.textContent = yesMessage;

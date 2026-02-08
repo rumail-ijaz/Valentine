@@ -142,7 +142,7 @@
 
       // ✅ Single message (no duplicate text)
       const yesMessage = "Yayyy! You said YES 😍💖";
-      const afterYesRedirect = "https://wa.me/923034131719?text=I%20said%20YES%20%F0%9F%92%96";
+     
 
       function clamp(n, min, max) {
         return Math.max(min, Math.min(max, n));
@@ -205,11 +205,11 @@
         happy.style.display = "block";
 
         // optional redirect
-        if (afterYesRedirect) {
-          setTimeout(() => {
-            window.location.href = afterYesRedirect;
-          }, 2500);
-        }
+        // if (afterYesRedirect) {
+        //   setTimeout(() => {
+        //     window.location.href = afterYesRedirect;
+        //   }, 2500);
+        // }
       });
     </script>
   </body>
